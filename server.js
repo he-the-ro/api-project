@@ -1,10 +1,15 @@
-require('dotenv').config();
 const express = require('express');
+const { getCoinData } = require('./api');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
-app.get('/', (req, res) => {
-  res.send('Welcome to the Cryptocurrency Analytics App!');
+app.get('/coins/:id', async (req, res) => {
+  try {
+    const coinData = await getCoinData(req.params.id);
+    res.json(coinData);
+  } catch (error) {
+    res.status(500).send({ error: 'An error occurred fetching coin data.' });
+  }
 });
 
 app.listen(port, () => {
